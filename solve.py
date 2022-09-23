@@ -94,18 +94,14 @@ def sign ():
 
     if sign in varX:
         varX = varX[1:]
-        #varX = int(varX)
         conversionX = True
     else:
-        #varX = int(varX)
         conversionX = False
 
     if sign in varY:
         varY = varY[1:]
-        #varY = int(varX)
         conversionY = True
     else:
-        #varY = int(varY)
         conversionY = False
 
 # this is the function that considers the letters of the alfabeth when trasfering to decimal so the A,B,C,D..... all signs 
@@ -115,111 +111,36 @@ def valueNum (n):
     else:
         return ord(n) - ord('A') + 10
 
-#change of radix with the help of valueNum (changes the Alphabet into numbers) and then chr() to go back to alphabet
-def radixFun ():
-    sign()
 
-    global radix
-    global varX
-    global varY
-    global answer
-    global lengthNumX
-    global lengthNumY
-
-    power = 1
-    changedX = 0
-    changedY = 0
-    lengthNumX = len(varX)
-    lengthNumY = len(varY)
-
-    #changing to base 10
-    if (radix < 2 or radix > 16):
-        answer = "Incorrect radix"
-    else:
-        for i in range(lengthNumX - 1, -1, -1):
-            if valueNum(varX[i]) >= radix:
-                print('Invalid number')
-            changedX += valueNum(varX[i])*power
-            power *= radix
-        varX = str(changedX)
-        for j in range(lengthNumY - 1, -1, -1):
-            if valueNum(varY[j]) >= radix:
-                print('Invalid number')
-            changedY += valueNum(varY[j])*power
-            power *= radix
-        varY = str(changedY)
-
-
-def integer_addition ():
-    radixFun()
-    
-    global radix
-    global varX
-    global varY
-    global conversionX
-    global conversionY
-    global answer
-    global lengthNumX
-    global lengthNumY
-
-    carry = 0 
-    #append to string
-    # making a dictionary for A,B,C,D,E,F --> maybe we can use the valueNum function when we add them but then I am 
-    for i in range (max(lengthNumX,lengthNumY) - 1, - 1, - 1):
-        answer[i] = str (int(varX[i]) + int(varY[i]) + carry)
-        if answer[i] >= radix:
-            answer[i] = answer[i] - radix
-            carry = 1
-        else:
-            carry = 0
-    if (carry == 1):
-        k = max(lengthNumX, lengthNumY) + 1 
-
-    #if (conversionY == False and conversionX == False):
-    #    answer = varX + varY
-    #elif (conversionY == False and conversionX == True):
-    #    answer = varY - varX
-    #elif (conversionY == True and conversionX == False):
-    #    answer = varX - varY
-    #elif (conversionY == True and conversionX == True):
-    #    answer = - varX - varY 
-    
-
-    
-
-
-def integer_subtraction():
-    radixFun()
-    global radix
-    global varX
-    global varY
-    global conversionX
-    global conversionY
-    global answer
-
-    # confused :(
-    if (conversionX == False and conversionX == False):
-        return 0
-    elif (conversionX == False and conversionY == True):
-        return 0
-    elif (conversionX == True and conversionY == False):
-        return 0 
-    elif (conversionX == True and conversionY == True):
-        return 0
-
-
-
-
-
-def multiplication_primary():
-    return 0
-
-
-def mutiplication_karatsuba():
+def multiplication_karatsuba(x,y, length, radix):
     #finish it before midnight
-    return 0
+    global lengthNumX
+    global lengthNumY
+    length = lengthNumX
+    xH = 0
+    xL = 0
+    yH = 0
+    yL = 0
+    answer = 0
+    number2 = 0
+    number0 = 0
+    number1 = 0
+    if (lengthNumX != lengthNumY):
+        return("Error")
+    else:
+        if (lengthNumX % 2 != 0):
+            length = length + 1
+        xH = x[:len(x)//2]
+        xL = x[len(x)//2:] #x = xH*pow(radix, length/2) + xL
+        yH = y[:len(y)//2]
+        yL = y[len(y)//2:] #y = yH*pow(radix, length/2) + yL
 
+        #need to figureout how to handle the numbers so that I transfer them into ints on which manipulations can be made
 
-def extended_euclidean_algorithm():
-    return 0
+        number2 = multiplication_karatsuba(xH,yH, length/2, radix)
+        number0 = multiplication_karatsuba(xL, yL, length/2, radix)
+        number1 = multiplication_karatsuba(xH+xL, yH+yL, length/2, radix) - number0 - number2
+        answer = number2*pow(radix, length) + number1*pow(radix, length/2) + number0
+    return answer
+
 
