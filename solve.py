@@ -84,6 +84,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
+#removes the sign from the beggining and puts True for negative values and False for positive values
 def sign ():
     global varX
     global varY
@@ -107,14 +108,14 @@ def sign ():
         #varY = int(varY)
         conversionY = False
 
-
+# this is the function that considers the letters of the alfabeth when trasfering to decimal so the A,B,C,D..... all signs 
 def valueNum (n):
     if n >= '0' and n <= '9':
         return ord(n) - ord('0')
     else:
         return ord(n) - ord('A') + 10
 
-
+#change of radix with the help of valueNum (changes the Alphabet into numbers) and then chr() to go back to alphabet
 def radixFun ():
     sign()
 
@@ -162,7 +163,7 @@ def integer_addition ():
     global lengthNumY
 
     carry = 0 
-    
+    #for here maybe instead of using dictionary we can use the functions ord() and chr() added some info about them in the readme
     for i in range (max(lengthNumX,lengthNumY) - 1, - 1, - 1):
         answer[i] = str (int(varX[i]) + int(varY[i]) + carry)
         if answer[i] >= 10:
