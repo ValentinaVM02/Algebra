@@ -5,13 +5,13 @@
 #
 #
 # Group number:
-# group_number 
+# 28 
 #
 # Author names and student IDs:
-# author_name_1 (author_student_ID_1) 
-# author_name_2 (author_student_ID_2)
-# author_name_3 (author_student_ID_3)
-# author_name_4 (author_student_ID_4)
+# Atilla Rzazade (1552848) 
+# Daua Karajeanes (1619675)
+# Valentina Marinova (1665154)
+# Gergana Valkova (1676385)
 ##
 
 # Import built-in json library for handling input/output 
