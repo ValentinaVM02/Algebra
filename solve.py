@@ -216,6 +216,7 @@ def multiplication_primary():
 
 
 def mutiplication_karatsuba():
+    #finish it before midnight
     return 0
 
 
