@@ -75,7 +75,18 @@ def solve_exercise(exercise_location : str, answer_location : str):
         if exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
             pass
-        # et cetera
+        elif exercise["operation"] == "addition":
+            # Solve modular arithmetic addition exercise
+            pass
+        elif exercise["operation"] == "substraction":
+            # Solve modular arithmetic substraction exercise
+            pass
+        elif exercise["operation"] == "multiplication":
+            # Solve modular arithmetic multiplication exercise
+            pass
+        elif exercise["operation"] == "inversion":
+            # Solve modular arithmetic inversion exercise
+            pass
 
 
     # Open file at answer_location for writing, creating the file if it does not exist yet
