@@ -16,7 +16,7 @@
 
 # Import built-in json library for handling input/output 
 import json
-from locale import RADIXCHAR
+#from locale import RADIXCHAR
 from multiprocessing.managers import ValueProxy
 
 radix = 10 
@@ -25,8 +25,8 @@ varY = 0
 conversionX = False
 conversionY = False
 answer = 0
-lengthNumX
-lengthNumY
+lengthNumX = 0
+lengthNumY = 0
 
 def solve_exercise(exercise_location : str, answer_location : str):
     """
@@ -220,4 +220,4 @@ def mutiplication_karatsuba():
 
 def extended_euclidean_algorithm():
     return 0
-
+    
