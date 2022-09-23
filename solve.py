@@ -19,6 +19,31 @@ import json
 from locale import RADIXCHAR
 from multiprocessing.managers import ValueProxy
 
+radix_dict = {
+    '0': 0,
+    '1': 1,
+    '2': 2,
+    '3': 3,
+    '4': 4,
+    '5': 5,
+    '6': 6,
+    '7': 7,
+    '8': 8,
+    '9': 9,
+    'A': 10,
+    'B': 11,
+    'C': 12,
+    'D': 13,
+    'E': 14,
+    'F': 15,
+    '10': 'A',
+    '11': 'B',
+    '12': 'C',
+    '13': 'D',
+    '14': 'E',
+    '15': 'F'
+}
+
 radix = 10 
 varX = 0
 varY = 0
@@ -124,10 +149,6 @@ def valueNum (n):
 
 
 def multiplication_karatsuba(x,y, length, radix):
-    #finish it before midnight
-    global lengthNumX
-    global lengthNumY
-    length = lengthNumX
     xH = 0
     xL = 0
     yH = 0
@@ -136,22 +157,53 @@ def multiplication_karatsuba(x,y, length, radix):
     number2 = 0
     number0 = 0
     number1 = 0
-    if (lengthNumX != lengthNumY):
-        return("Error")
-    else:
-        if (lengthNumX % 2 != 0):
-            length = length + 1
-        xH = x[:len(x)//2]
-        xL = x[len(x)//2:] #x = xH*pow(radix, length/2) + xL
-        yH = y[:len(y)//2]
-        yL = y[len(y)//2:] #y = yH*pow(radix, length/2) + yL
 
-        #need to figureout how to handle the numbers so that I transfer them into ints on which manipulations can be made
+    if (length == 1):
+        int_x = int(radix_dict[x])
+        int_y = int(radix_dict[y])
+        int_xy = int_x * int_y
+        right_digit = str(radix_dict[int_xy % radix])
+        left_digit = str(radix_dict[int_xy // radix])
+        return left_digit + right_digit
 
-        number2 = multiplication_karatsuba(xH,yH, length/2, radix)
-        number0 = multiplication_karatsuba(xL, yL, length/2, radix)
-        number1 = multiplication_karatsuba(xH+xL, yH+yL, length/2, radix) - number0 - number2
-        answer = number2*pow(radix, length) + number1*pow(radix, length/2) + number0
+    
+    if (length % 2 != 0):
+        length += 1
+    xH = x[:len(x)//2]
+    xL = x[len(x)//2:] #x = xH*pow(radix, length/2) + xL
+    yH = y[:len(y)//2]
+    yL = y[len(y)//2:] #y = yH*pow(radix, length/2) + yL
+
+    #need to figureout how to handle the numbers so that I transfer them into ints on which manipulations can be made
+
+    number2 = multiplication_karatsuba(xH,yH, length/2, radix)
+    number0 = multiplication_karatsuba(xL, yL, length/2, radix)
+    number1 = multiplication_karatsuba(integer_addition(xH, xL, radix), integer_addition(yH, yL, radix), length/2, radix) - number0 - number2
+    answer = number2*pow(radix, length) + number1*pow(radix, length/2) + number0
+
     return answer
+
+def extended_euclidean_algorithm(x, y, radix):
+    a1 = 1
+    a2 = 0
+    b1 = 0
+    b2 = 1
+
+    while(y > 0):
+        q = x // y
+        r = x - q*y #change to functions -,*
+        x = y
+        y = r
+        a3 = a1 - q*a2
+        b3 = b1 - q*b2
+        a1, b1 = a2, b2
+        a2, b2 = a3, b3
+
+    d = x
+
+    return d, a1, b1
+    
+
+
 
 
