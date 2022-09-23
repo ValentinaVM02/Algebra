@@ -1,7 +1,7 @@
 # Algebra
 Algebra
 Here are some useful resourses that I found:
-\n https://pythonandr.com/2015/10/13/karatsuba-multiplication-algorithm-python-code/
+https://pythonandr.com/2015/10/13/karatsuba-multiplication-algorithm-python-code/
 https://www.codeandgadgets.com/karatsuba-multiplication-python/
 https://github.com/5war00p/Karatsuba/blob/master/Karatsuba_Mul_rec.py
 https://www.techiedelight.com/extended-euclidean-algorithm-implementation/
