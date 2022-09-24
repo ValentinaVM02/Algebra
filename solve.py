@@ -184,7 +184,7 @@ def extended_euclidean_algorithm(x, y, radix):
     while(y > 0):
         q = x // y #find a way to do divison???
         q_length = len(str(q))
-        r = integer_subtraction(x, multiplication_karatsuba(q, y, q_length, radix), radix) #change to functions -,*
+        r = integer_subtraction(x, multiplication_karatsuba(q, y, q_length, radix), radix)
         x = y
         y = r
         a3 = integer_subtraction(a1, multiplication_karatsuba(q,a2, q_length, radix), radix)
@@ -209,8 +209,23 @@ def modular_subtraction(x, y, mod, radix):
     if z >= 0:
         z = z
     else:
-        z = integer_addition(z, mod,radix)
+        z = integer_addition(z, mod, radix)
     return z
 
+def inversion (x, mod, radix):
+
+    x1, x2 = 1, 0
+    while(mod>0):
+        q = x // mod #find a way to do divison???
+        r = x - q*mod
+        x, mod = mod, r
+        x3 = x1 - q*x2
+        x1, x2 = x2, x3
+    
+    if x == 1:
+        return x1
+    else:
+        'inverse does not exist'
 
 
+#invalid inputs
