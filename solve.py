@@ -141,6 +141,111 @@ def sign ():
         conversionY = False
 
 
+def get_sign(a):
+    return True if a[0] == '-' else False
+
+
+def determine_m(x, y):
+    m = 0
+    signedX = get_sign(x)
+    signedY = get_sign(y)
+
+    x = x[1:] if signedX else x
+    y = y[1:] if signedY else y
+
+    if len(x) == len(y):
+        m = len(x)
+    elif len(y) > len(x) and signedY:
+        # -1 because 0th index is sign
+        m = len(y) - 1
+    elif len(x) > len(y) and signedX:
+        # same
+        m = len(x) - 1
+    elif len(x) != len(y) and not signedX and not signedY:
+        m = max(len(x), len(y))
+
+    return m, signedX, signedY, x, y
+
+
+def get_operands(x, y, i, j, signedX, signedY):
+    # index - 2 since the answer contains extra 2 indices
+    index_x = i - 2
+    index_y = j - 2
+    x_index = int(radix_dict[x[index_x]])
+    y_index = int(radix_dict[y[index_y]])
+    # convert index to corresponding digit (i.e. '2' -> 2, 'A' -> 10) and sign (i.e. '-A' -> -10)
+    dictX = -1*x_index if signedX else x_index
+    dictY = -1*y_index if signedY else y_index
+
+    return dictX, dictY
+
+
+def loop(m, x, y, radix, signedX, signedY, answer, operation):
+
+    carry = 0
+    ans_sign = ''
+
+    for i in range(m+1, 1, -1):
+
+        dictX, dictY = get_operands(x, y, i, i, signedX, signedY)
+
+        if operation == '+':
+            addResult = dictX + dictY + carry
+        else:
+            addResult = dictX - dictY - carry
+
+        if addResult >= radix:
+            answer[i] = str(radix_dict[str(addResult - radix)])
+            carry = 1
+        else:
+            # if -x[i] - y[i] = -c < 0
+            if addResult < 0:
+                addResult = -addResult
+                ans_sign = '-'
+                # if |c| > radix
+                if addResult >= radix:
+                    answer[i] = str(radix_dict[str(addResult - radix)])
+                    carry = 1
+                    continue
+            answer[i] = str(radix_dict[str(addResult)])
+            carry = 0
+
+    answer[1] = str(carry) if carry == 1 else ans_sign
+    answer[0] = ans_sign if carry == 1 else ''
+
+    return ('').join(answer)
+
+
+def integer_addition(x: str, y: str, r: int):
+
+    m, signedX, signedY, x, y = determine_m(x, y)
+    radix = r
+    answer = list('0' * (m+2))
+    xz = '0' * (m - len(x))
+    yz = '0' * (m - len(y))
+
+    xx = xz+x
+    yy = yz+y
+
+    answer = loop(m, xx, yy, radix, signedX, signedY, answer, '+')
+
+    return answer
+
+def integer_subtraction(x: str, y: str, r: int):
+    m, signedX, signedY, x, y = determine_m(x, y)
+    radix = r
+    answer = list('0' * (m+2))
+    xz = '0' * (m - len(x))
+    yz = '0' * (m - len(y))
+
+    xx = xz+x
+    yy = yz+y
+
+    answer = loop(m, xx, yy, radix, signedX, signedY, answer, '-')
+
+    return answer
+
+
 def multiplication_karatsuba(x,y, length, radix):
     xH = 0
     xL = 0
@@ -182,7 +287,7 @@ def extended_euclidean_algorithm(x, y, radix):
     b1 = 0
     b2 = 1
     while(y > 0):
-        q = x // y #find a way to do divison???
+        q = x // y #find a way to do divison??? get radix rep of number?
         q_length = len(str(q))
         r = integer_subtraction(x, multiplication_karatsuba(q, y, q_length, radix), radix)
         x = y

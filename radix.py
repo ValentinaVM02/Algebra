@@ -1,3 +1,8 @@
+
+
+from array import array
+import time
+
 radix_dict = {
     '0': 0,
     '1': 1,
@@ -175,119 +180,89 @@ def get_radix_rep(a: int, r: int):
         num = co
 
     return ('').join(rep)
-       
+
 #print(get_radix_rep('255', 16))
 
+
+# the idea is to handle each multiplication as a row and add together all the rows at the end
+def row_handler(values: array, r: int):
+    ans = ''
+    result = 0
+    i = 0
+
+
+    while i < len(values) - 1:
+
+        valX, valY = values[i], values[i+1]
+
+        valX = '0' + valX
+        valY += '0'
+
+        result = integer_addition(valX, valY, r)
+
+        ans += result[len(result) - 1]
+
+        result = result[0:len(result) - 1]
+
+        values.pop(i)
+        values[i] = result
+    
+    ans = values[0] + ans[::-1]
+
+    if ans[0] == '0':
+        ans = ans[1:]
+
+    return ans
+
+
+# use hexhero to create an array of carries and add them at the end and adjust all positions to fit hex numbers
 def integer_multiplication_naive(x: str, y: str, r: int):
 
+    seconds = time.time()
+    local_time = time.ctime(seconds)
+    print(local_time)
+
     # m = len(x)+len(y) (x,y without signs)
-    m, signedX, signedY, x, y = determine_m_multiplication(x, y)
     radix = r
 
     # m + 1 because index 0 is for the sign
-    answer = ['0'] * (m+1)
-    answer[0] = '-' if (signedX and not signedY) or (signedY and not signedX) else ''
-    carry = 0
-    ans_index = m
-    counter = 0
 
-    # for b in range(len(x), -1, -1): # each index of the row P_i
+    smallRow = []
+    mainRow = []
 
-    #     row = [0] * (len(x) + 1)
-    #     count = 0
+    for i in range(len(y) - 1, -1, -1):  # digits of y
+        smallRow = []
+        for j in range(len(x) - 1, -1, -1):  # digits of x
 
-    #     for i in range(len(x) - 1, -1, -1): # digits of x
-    #         carry = 0
-    #         ans_index = m - counter
-    #         for j in range(len(y) - 1, -1, -1): # digits of y
-    #             # get operands
-    #             dictX, dictY = get_operands_multiplication(x, y, i, j)
+            dictX, dictY = get_operands_multiplication(x, y, j, i)
 
-    #             # get decimal product
-    #             decimalResult = (dictX * dictY)
+            decimal_result = (dictX*dictY)
 
-    #             # get radix representation of the decimal result
-    #             rad_result = get_radix_rep(decimalResult, r)
-            
-    #             r_carry = 0
-    #             for rad_ind in range(0, len(rad_result)):
-    #                 col_ans = row[b - rad_ind] + radix_dict[rad_result[len(rad_result) - rad_ind - 1]] + r_carry
-    #                 if col_ans >= radix:
-    #                     r_carry = 1
-    #                     col_ans -= radix 
-    #                 row[b - rad_ind] = col_ans
-    #             count += 1
-    #         counter += 1
+            radix_rep = get_radix_rep(decimal_result, radix)
 
-
-    for i in range(len(x) - 1, -1, -1): # digits of x
-
-        carry = 0
-
-        row = [0] * (len(x) + 1)
-
-
-        for b in range(len(row) - 1, -1, -1): #digits of row
-
-            count = 0
-            
-            for j in range(len(y) - 1, -1, -1): # digits of y
-
-                # get operands
-                dictX, dictY = get_operands_multiplication(x,y,i,j)
-                
-                decimalResult = (dictX * dictY)
-
-                rad_result = get_radix_rep(decimalResult, radix)
-
-                r_carry = 0
-                for k in range(len(rad_result) - 1, -1, -1):
-                    row_res = row[b - count] + radix_dict[rad_result[k]] + r_carry
-                    if row_res >= radix:
-                        r_carry = 1
-                        row_res -= radix
-                    row[b - count] = row_res
-                    
-
-
-
-    # for i in range(len(x) - 1, -1, -1): # digits of y
-        # carry = 0
-        # ans_index = m - counter
-        # for j in range(len(y) - 1, -1, -1): # digits of x
-        #     row = [0] * (len(x) + 1)
-        #     # get operands
-        #     dictX, dictY = get_operands_multiplication(x, y, i, j)
-
-        #     # get decimal product
-        #     decimalResult = (dictX * dictY)
-
-        #     # get radix representation of the decimal result
-        #     rad_result = get_radix_rep(decimalResult, r)
-            
-        #     #rad_ind = len(rad_result) - 1
-        #     for b in range(len(x), -1, -1): # each index of the row P_i
-        #         r_carry = 0
-        #         count = 0
-        #         for rad_ind in range(0, len(rad_result)):
-        #             col_ans = row[b - rad_ind] + radix_dict[rad_result[len(rad_result) - rad_ind -]] + r_carry
-        #             if col_ans >= radix:
-        #                 r_carry = 1
-        #                 col_ans -= radix 
-        #             row[b - count] = col_ans
-        #             count += 1
-                     
+            smallRow.append(radix_rep)
         
-        # counter += 1
+        mainRow.append(row_handler(smallRow, radix))
 
-    for index in range(1, len(answer)):
-        answer[index] = str(radix_dict[str(answer[index])])
+    answer = row_handler(mainRow, radix)
+
+    ans = ''
+    if (get_sign(x) and not get_sign(y)) or (get_sign(y) and not get_sign(x)):
+        ans = '-' + ('').join(answer)
+    else:
+        ans = ('').join(answer)
+
+    seconds = time.time()
+    local_time = time.ctime(seconds)
+    print(local_time)
+    
+    return ans
+
+
+print(integer_multiplication_naive('FA', 'ED', 16))
+print(integer_multiplication_naive('7318665512158743638605182887841371307645447670453461740187886842285460110804256310080546155485046778363608500110234673013838173017530458560706070707713126821437573764342276656812630301431186825833037171346785113265346706601833378432566821732766823504286847488473054082610767630565405366804425587637823220651072351816738606021587177867035623716605483826508470114323656412447422807454032367513124246015323416112182132054273176446604471300367702035745834407032504734726667023080565283532517442762276238705877865570885436235744740846486366253535015023376404043763460661258664436614051817602265626070244257100354382015048561821742532626321271578412315816728867218707756147730355350321051353434236566277464765475375722376650448828467235121544641156704737478520252122115548843021301055746020380530774067163516800828720580320271270605087218011550255735266202788214122168247323320745730580777657424033776206203451855366227147377245808053335756414852704156422263474050542137280505780427261724671205814557631620757174762032204028602827034520754515245703031776', 
+                                   '1568771344525852324131804138148802505753257655173371724107105074660656230256628473027874674317757244822742785775663506723327534180715833703401071617465314742013234485351032251153484185260643450668626460448745460515241258237763321043703485518743552650433714870524446615224154425234286032310515133387707535123238512533440840472803784711524486015757410618876707187324022408475576848040381272661523864655688161205714253833387667026225548576215854008022548134662252657616744431415734100732757365863174682653500871865607764257075563835252560604175301460027857128350521536551273818187830400435520571101247334433180242741245114184707620814625828800254801811811413885670316827435341526387147025782021133408383157028623231638776754840477052374530383586615072887426603342024213002804087201076322070118220818651821324506303733788248420286165404115511176562077205831100403111555008375135508124338773828723055185025888857703075881317146746180376668247185570372867688347354744578624718880138114621746257421442600554133510357462852040747022858481345676448874732072', 
+                                    16))
 
 
 
-    return ('').join(answer)
-
-
-#print(integer_multiplication_naive('FF', 'FF', 16))
-
-#print(integer_multiplication_naive('2E6C', 'AF3', 16))
