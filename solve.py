@@ -287,7 +287,7 @@ def extended_euclidean_algorithm(x, y, radix):
     b1 = 0
     b2 = 1
     while(y > 0):
-        q = x // y #find a way to do divison???
+        q = x // y #find a way to do divison??? get radix rep of number?
         q_length = len(str(q))
         r = integer_subtraction(x, multiplication_karatsuba(q, y, q_length, radix), radix) #change to functions -,*
         x = y
