@@ -125,6 +125,9 @@ def multiplication_karatsuba(x,y, length, radix):
     number2 = 0
     number0 = 0
     number1 = 0
+#base case
+
+
     if (lengthNumX != lengthNumY):
         return("Error")
     else:
