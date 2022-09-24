@@ -140,13 +140,6 @@ def sign ():
     else:
         conversionY = False
 
-# this is the function that considers the letters of the alfabeth when trasfering to decimal so the A,B,C,D..... all signs 
-def valueNum (n):
-    if n >= '0' and n <= '9':
-        return ord(n) - ord('0')
-    else:
-        return ord(n) - ord('A') + 10
-
 
 def multiplication_karatsuba(x,y, length, radix):
     xH = 0
@@ -188,14 +181,14 @@ def extended_euclidean_algorithm(x, y, radix):
     a2 = 0
     b1 = 0
     b2 = 1
-
     while(y > 0):
-        q = x // y
-        r = x - q*y #change to functions -,*
+        q = x // y #find a way to do divison???
+        q_length = len(str(q))
+        r = integer_subtraction(x, multiplication_karatsuba(q, y, q_length, radix), radix) #change to functions -,*
         x = y
         y = r
-        a3 = a1 - q*a2
-        b3 = b1 - q*b2
+        a3 = integer_subtraction(a1, multiplication_karatsuba(q,a2, q_length, radix), radix)
+        b3 = integer_subtraction(b1, multiplication_karatsuba(q, b2, q_length, radix), radix)
         a1, b1 = a2, b2
         a2, b2 = a3, b3
 
@@ -203,7 +196,21 @@ def extended_euclidean_algorithm(x, y, radix):
 
     return d, a1, b1
     
+def modular_addition(x, y, mod, radix):
+    z = integer_addition(x, y, radix)
+    if z < mod:
+        z = z
+    else:
+        z = integer_subtraction(z, mod, radix)
+    return z
 
+def modular_subtraction(x, y, mod, radix):
+    z = integer_subtraction(x, y, radix)
+    if z >= 0:
+        z = z
+    else:
+        z = integer_addition(z, mod,radix)
+    return z
 
 
 
