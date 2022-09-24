@@ -178,6 +178,8 @@ def get_radix_rep(a: int, r: int):
        
 #print(get_radix_rep('255', 16))
 
+
+# use hexhero to create an array of carries and add them at the end and adjust all positions to fit hex numbers
 def integer_multiplication_naive(x: str, y: str, r: int):
 
     # m = len(x)+len(y) (x,y without signs)
@@ -191,94 +193,25 @@ def integer_multiplication_naive(x: str, y: str, r: int):
     ans_index = m
     counter = 0
 
-    # for b in range(len(x), -1, -1): # each index of the row P_i
 
-    #     row = [0] * (len(x) + 1)
-    #     count = 0
-
-    #     for i in range(len(x) - 1, -1, -1): # digits of x
-    #         carry = 0
-    #         ans_index = m - counter
-    #         for j in range(len(y) - 1, -1, -1): # digits of y
-    #             # get operands
-    #             dictX, dictY = get_operands_multiplication(x, y, i, j)
-
-    #             # get decimal product
-    #             decimalResult = (dictX * dictY)
-
-    #             # get radix representation of the decimal result
-    #             rad_result = get_radix_rep(decimalResult, r)
-            
-    #             r_carry = 0
-    #             for rad_ind in range(0, len(rad_result)):
-    #                 col_ans = row[b - rad_ind] + radix_dict[rad_result[len(rad_result) - rad_ind - 1]] + r_carry
-    #                 if col_ans >= radix:
-    #                     r_carry = 1
-    #                     col_ans -= radix 
-    #                 row[b - rad_ind] = col_ans
-    #             count += 1
-    #         counter += 1
-
-
-    for i in range(len(x) - 1, -1, -1): # digits of x
-
+    for i in range(len(x) - 1, -1, -1): # digits of y
         carry = 0
+        ans_index = m - counter
+        for j in range(len(y) - 1, -1, -1): # digits of x
+            row = [0] * (len(x) + 1)
+            # get operands
+            dictX, dictY = get_operands_multiplication(x, y, i, j)
 
-        row = [0] * (len(x) + 1)
+            # get decimal product
+            decimalResult = (dictX * dictY)
 
+            # get radix representation of the decimal result
+            rad_result = get_radix_rep(decimalResult, r)
 
-        for b in range(len(row) - 1, -1, -1): #digits of row
-
-            count = 0
             
-            for j in range(len(y) - 1, -1, -1): # digits of y
-
-                # get operands
-                dictX, dictY = get_operands_multiplication(x,y,i,j)
-                
-                decimalResult = (dictX * dictY)
-
-                rad_result = get_radix_rep(decimalResult, radix)
-
-                r_carry = 0
-                for k in range(len(rad_result) - 1, -1, -1):
-                    row_res = row[b - count] + radix_dict[rad_result[k]] + r_carry
-                    if row_res >= radix:
-                        r_carry = 1
-                        row_res -= radix
-                    row[b - count] = row_res
-                    
-
-
-
-    # for i in range(len(x) - 1, -1, -1): # digits of y
-        # carry = 0
-        # ans_index = m - counter
-        # for j in range(len(y) - 1, -1, -1): # digits of x
-        #     row = [0] * (len(x) + 1)
-        #     # get operands
-        #     dictX, dictY = get_operands_multiplication(x, y, i, j)
-
-        #     # get decimal product
-        #     decimalResult = (dictX * dictY)
-
-        #     # get radix representation of the decimal result
-        #     rad_result = get_radix_rep(decimalResult, r)
-            
-        #     #rad_ind = len(rad_result) - 1
-        #     for b in range(len(x), -1, -1): # each index of the row P_i
-        #         r_carry = 0
-        #         count = 0
-        #         for rad_ind in range(0, len(rad_result)):
-        #             col_ans = row[b - rad_ind] + radix_dict[rad_result[len(rad_result) - rad_ind -]] + r_carry
-        #             if col_ans >= radix:
-        #                 r_carry = 1
-        #                 col_ans -= radix 
-        #             row[b - count] = col_ans
-        #             count += 1
                      
         
-        # counter += 1
+        counter += 1
 
     for index in range(1, len(answer)):
         answer[index] = str(radix_dict[str(answer[index])])
@@ -291,3 +224,15 @@ def integer_multiplication_naive(x: str, y: str, r: int):
 #print(integer_multiplication_naive('FF', 'FF', 16))
 
 #print(integer_multiplication_naive('2E6C', 'AF3', 16))
+
+
+def modular_reduction(x:str, m:str, r:int):
+    
+    xPrime = x[1:] if get_sign(x) else x
+
+    k = len(x)
+
+    n = len(m)
+    
+
+    return 
