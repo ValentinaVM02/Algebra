@@ -1,20 +1,20 @@
 ##
-# 2WF90 Algebra for Security -- Software Assignment 1 
+# 2WF90 Algebra for Security -- Software Assignment 1
 # Integer and Modular Arithmetic
 # solve.py
 #
 #
 # Group number:
-# 28 
+# 28
 #
 # Author names and student IDs:
-# Atilla Rzazade (1552848) 
+# Atilla Rzazade (1552848)
 # Daua Karajeanes (1619675)
 # Valentina Marinova (1665154)
 # Gergana Valkova (1676385)
 ##
 
-# Import built-in json library for handling input/output 
+# Import built-in json library for handling input/output
 import json
 # from locale import RADIXCHAR
 from multiprocessing.managers import ValueProxy
@@ -47,7 +47,7 @@ radix_dict = {
     '15': 'F'
 }
 
-radix = 10 
+radix = 10
 varX = 0
 varY = 0
 conversionX = False
@@ -56,18 +56,19 @@ answer = 0
 lengthNumX = 0
 lengthNumY = 0
 
-def solve_exercise(exercise_location : str, answer_location : str):
+
+def solve_exercise(exercise_location: str, answer_location: str):
     """
     solves an exercise specified in the file located at exercise_location and
     writes the answer to a file at answer_location. Note: the file at
     answer_location might not exist yet and, hence, might still need to be created.
     """
-    
+
     # Open file at exercise_location for reading.
     with open(exercise_location, "r") as exercise_file:
-        # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data 
+        # Deserialize JSON exercise data present in exercise_file to corresponding Python exercise data
         exercise = json.load(exercise_file)
-        
+
     ### Parse and solve ###
     global radix
     global varX
@@ -98,7 +99,7 @@ def solve_exercise(exercise_location : str, answer_location : str):
         elif exercise["operation"] == "extended_euclidean_algorithm":
             # Solve integer arithmetic subtraction exercise
             pass
-    else: # exercise["type"] == "modular_arithmetic"
+    else:  # exercise["type"] == "modular_arithmetic"
         # Check what operation within the modular arithmetic operations we need to solve
         if exercise["operation"] == "reduction":
             # Solve modular arithmetic reduction exercise
@@ -116,18 +117,19 @@ def solve_exercise(exercise_location : str, answer_location : str):
             # Solve modular arithmetic inversion exercise
             pass
 
-
     # Open file at answer_location for writing, creating the file if it does not exist yet
     # (and overwriting it if it does already exist).
     with open(answer_location, "w") as answer_file:
         # Serialize Python answer data (stored in answer) to JSON answer data and write it to answer_file
         json.dump(answer, answer_file, indent=4)
 
-#removes the sign from the beggining and puts True for negative values and False for positive values
-def sign ():
+# removes the sign from the beggining and puts True for negative values and False for positive values
+
+
+def sign():
     global varX
     global varY
-    global conversionX 
+    global conversionX
     global conversionY
     sign = '-'
 
@@ -183,73 +185,6 @@ def get_operands(x, y, i, j, signedX, signedY):
     return dictX, dictY
 
 
-def loop(m, x, y, radix, signedX, signedY, answer, operation):
-
-    carry = 0
-    ans_sign = ''
-
-    for i in range(m+1, 1, -1):
-
-        dictX, dictY = get_operands(x, y, i, i, signedX, signedY)
-
-        if operation == '+':
-            addResult = dictX + dictY + carry
-        else:
-            addResult = dictX - dictY - carry
-
-        if addResult >= radix:
-            answer[i] = str(radix_dict[str(addResult - radix)])
-            carry = 1
-        else:
-            # if -x[i] - y[i] = -c < 0
-            if addResult < 0:
-                addResult = -addResult
-                ans_sign = '-'
-                # if |c| > radix
-                if addResult >= radix:
-                    answer[i] = str(radix_dict[str(addResult - radix)])
-                    carry = 1
-                    continue
-            answer[i] = str(radix_dict[str(addResult)])
-            carry = 0
-
-    answer[1] = str(carry) if carry == 1 else ans_sign
-    answer[0] = ans_sign if carry == 1 else ''
-
-    return ('').join(answer)
-
-
-def integer_addition(x: str, y: str, r: int):
-
-    m, signedX, signedY, x, y = determine_m(x, y)
-    radix = r
-    answer = list('0' * (m+2))
-    xz = '0' * (m - len(x))
-    yz = '0' * (m - len(y))
-
-    xx = xz+x
-    yy = yz+y
-
-    answer = loop(m, xx, yy, radix, signedX, signedY, answer, '+')
-
-    return answer
-
-def integer_subtraction(x: str, y: str, r: int):
-    # m is the wordlength of result
-    m, signedX, signedY, x, y = determine_m(x, y)
-    radix = r
-    answer = list('0' * (m+2))
-    xz = '0' * (m - len(x))
-    yz = '0' * (m - len(y))
-
-    xx = xz+x
-    yy = yz+y
-
-    answer = loop(m, xx, yy, radix, signedX, signedY, answer, '-')
-
-    return answer
-
-
 def multiplication_karatsuba(x, y, length, radix):
     print(x, y)
     xH = 0
@@ -272,41 +207,48 @@ def multiplication_karatsuba(x, y, length, radix):
     if (length % 2 != 0):
         length += 1
     xH = x[:length//2] if length > 1 else x
-    xL = x[length//2:] if length > 1 else x #x = xH*pow(radix, length/2) + xL
+    xL = x[length//2:] if length > 1 else x  # x = xH*pow(radix, length/2) + xL
     yH = y[:length//2] if length > 1 else y
-    yL = y[length//2:] if length > 1 else y #y = yH*pow(radix, length/2) + yL
+    yL = y[length//2:] if length > 1 else y  # y = yH*pow(radix, length/2) + yL
     print(xH, xL, yH, yL)
-    #need to figureout how to handle the numbers so that I transfer them into ints on which manipulations can be made
+    # need to figureout how to handle the numbers so that I transfer them into ints on which manipulations can be made
     print(integer_addition(yH, yL, radix))
-    number2 = multiplication_karatsuba(xH,yH, length/2, radix)
+    number2 = multiplication_karatsuba(xH, yH, length/2, radix)
     number0 = multiplication_karatsuba(xL, yL, length/2, radix)
-    number1 = integer_subtraction(integer_subtraction(multiplication_karatsuba(integer_addition(xH, xL, radix), integer_addition(yH, yL, radix), length/2, radix), number0, radix), number2, radix)
-    answer = integer_addition(integer_addition(integer_multiplication_naive(number2, "1" + length * "0", radix), integer_multiplication_naive(number1,"1" + (length // 2) * "0", radix), radix), number0, radix)
+    number1 = integer_subtraction(integer_subtraction(multiplication_karatsuba(integer_addition(
+        xH, xL, radix), integer_addition(yH, yL, radix), length/2, radix), number0, radix), number2, radix)
+    answer = integer_addition(integer_addition(integer_multiplication_naive(number2, "1" + length * "0", radix),
+                              integer_multiplication_naive(number1, "1" + (length // 2) * "0", radix), radix), number0, radix)
 
     return answer
 
+
 def division(x, y, radix):
     i = 0
-    while(x[:1] != '-'):
+    while (x[:1] != '-'):
         x = integer_subtraction(x, y, radix)
         i += 1
     return get_radix_rep(i, radix)
+
 
 def extended_euclidean_algorithm(x, y, radix):
     a1 = '1'
     a2 = '0'
     b1 = '0'
     b2 = '1'
-    while(y[:1] != '-' and y[:1] != '0'):
+    while (y[:1] != '-' and y[:1] != '0'):
         q = division(x, y, radix)
         length = max(len(str(y)), len(str(q)))
-        r = integer_subtraction(x, integer_multiplication_naive(q, y, radix), radix)
+        r = integer_subtraction(
+            x, integer_multiplication_naive(q, y, radix), radix)
         x = y
         y = r
         length = max(len(str(q)), len(str(a2)))
-        a3 = integer_subtraction(a1, integer_multiplication_naive(q, a2,radix), radix)
+        a3 = integer_subtraction(
+            a1, integer_multiplication_naive(q, a2, radix), radix)
         length = max(len(str(q)), len(str(b2)))
-        b3 = integer_subtraction(b1, integer_multiplication_naive(q, b2,radix), radix)
+        b3 = integer_subtraction(
+            b1, integer_multiplication_naive(q, b2, radix), radix)
         a1, b1 = a2, b2
         a2, b2 = a3, b3
 
@@ -314,11 +256,13 @@ def extended_euclidean_algorithm(x, y, radix):
 
     return d, a1, b1
 
+
 def decimal(x):
     if x >= '0' and x <= '9':
         return ord(x) - ord('0')
     else:
         return ord(x) - ord('A') + 10
+
 
 def compare(x, y):
     if len(x) > len(y):
@@ -341,17 +285,20 @@ def compare(x, y):
 def modular_addition(x, y, mod, radix):
     x = modularReduction(x, mod, radix)
     y = modularReduction(y, mod, radix)
-    print(x)
-    print(y)
+
     z = integer_addition(x, y, radix)
     if compare(z, mod):
         z = integer_subtraction(z, mod, radix)
     return z
 
+
 def modular_subtraction(x, y, mod, radix):
+    x = modularReduction(x, mod, radix)
+    y = modularReduction(y, mod, radix)
+
     z = integer_subtraction(x, y, radix)
     if compare(z, '0'):
-        z = z
+        return z
     else:
         z = integer_addition(z, mod, radix)
     return z
@@ -379,7 +326,7 @@ def inversion (x, mod, radix):
         print('inverse does not exist')
 
 
-print(multiplication_karatsuba('29','39', 2, 12))
+# print(multiplication_karatsuba('29','39', 2, 12))
 
 
 # x = "2055874C17B6A157153A43DD9CA6349B57C59904C050A2BA3635B496781294B820B46610105DBC41D3B6D362984574C00468984B4831B5313D83573524A46D6746A28D0A54B82B5162B1CB001DD99661D65227130B7CD0AC08AB153B32972D216AB9D4C211A1ADC184182C596327B7DD263C4CCB04AC531C4D48CC91625086D3BAD0187B990535864364674C5A4A281037A27C8249A76D65C3CD7275AB224D865C9A4C8504D1AB7289DCC6DBC79242AB3A0589AB81D68D187B1581DD44A9255C5C7AD640C646D346B8BA8D5DC5954C337AD33284335999C105C78AA379BA1A439BBC481CA705029A3548375B47295D93B39B9A50ABB225157310860144B989B872766A75B276DB5167AD8DA62C503AA85837A13A96463DC72638D7842589C81616A809601907A2A85171B335573A2B01798292C951BA0137B6A8D21B27DA494622917D0CC01288D8212B7657706A9AC836D8703B1B1DB03209A6196938D372543631917A7D0A7C34632AA1C289D3415334C7B79B3A40C020C145A18DCCCAA4DD94D944DBD02C265088D080367901051D585C8D3C1A2D1117D34586D7ACAD582BD7D592D73CCD1CA586D3D973D3CC89C0BA23B9D80"
@@ -395,3 +342,13 @@ print(multiplication_karatsuba('29','39', 2, 12))
 #                           3))
 
 # print(integer_subtraction('AFF', 'EDA', 16))
+
+# print(modular_addition('13113033243303203040341433103011311233423224102014244223321411111300142204302311202223020433004033044214134133244232322434402024410402104023300023033322304314101404133001404333102022014101233303204230303230422413243144314212114431342030433222401233401311301202032314403001033412210011240002222131014400441431024234204301214413220310220323144130011433010031201132013120344104043433140200230234024404432241033200423211033100440321241030334330221111302003032310222213023241131104041224241203212223040112303100412021304424024413130340400002114004411114002400104200041231402220203413114323224131040440430332244213224303344132344231322232310114443021201340004040144204331012401343102440331000114211011032440322041423220330001344323101110323103232021030413132133231104203410411404242110241333414121040333311134211314232111224133140333412412422023401403311104101042143042202114440212213232030140202300114413223044304434104412313422412201210133042111400142344434241021434342223301321241344323303014202230341222010132312400401041443144304332324432143403314141004240204140022403141421030023143143012212302243324342404233211302201324124121440011110110014140320331124022103344041312034330440434014044422202211241344122200403343101041203414442311123010342123112301430411030024122004000010401310304414333233421230120202404103044311104403003203402032443002410110331234210313310311224012444302241443013011303014220100213102114201030011431241211130'
+#                 ,'200122333323122421432313220232211004021120142200411014313132101431142434202203400212012222104410143034230322100303304330133132440231141021133142110410141214300143332340301022210404211004342232240130242031344401111431314221420141420114234303321310330314241114121031401123044241202224301404044143413233422332032224012312100334231030332104333032313321303243434442033231010402334324342402433022404113334443202033121241043003140002203233302020020241433004424102101330030202130033333104443231222142310423133011414121202102403041021340301220044413214123101434331131022301313034010144213213304214420133321444022041241030134440144321331344421021004142312411220331222040244142414413014003343232444400113201434244322400333302100000113311334213044441120433020201133302342314114332234421144244122140102320140110401000344414213220134242010331410424132423204423242103033140324044404112132331134440042432021444313120303242220040431233140320444442422132331212141333142122133012110442010112100002100221332232221134013200003001031202444242001344213413003413202311432002004021320244132343332013002121032323131221223234202332233012444103223211032123400110102120434422043023242234324003114232144040300132441032423144000341443424222410413414013342412124031414112140300420320044134000402334443140343332311144414210211443442241224103423444042303301344002204044304340342401030120314041111333124134341340324001343122314111214111304323220043202042031213424003',
+#                 '124420141100344331213220142234212133433211221322200210133331022130223221113132114242001104142112134434112442100220401143223133403023110023013440431340301222411441320241323230120134111440413231124433300422113240221431211221023013124224034422103001203434204203010040420413141321241110212043043400111011340322124024030310040242013413243030412322401201303344220224421030420424130404031134331223220310140321122011342212403243013214443021421413420321231001321432140011404100320134044424434413410410143143034333300422343022224111423134401442320402440143234023231031212411003324030142034103221113240032003200434104123132012211111204432112041134432042443244303403100034420034234120021342100241410124431304142133344334020230243212331242003304012020110242221024410343212331113412100423022244323014042444322202242131031402224134220043332241214431301331241143311010102024243131224111033411321201033214233003213412012300120144003244403002114420421001223144423321420204132221110122421421320340310222201242220233224132024423344341113334021303143033334340304333421414231411131403232323332041034014231113211220140120144200032204220444141232442243231300110212101011101330203204140012231121324322110322320403243320244232111013101422440334234034230041134401100032443404432130043244130300244443130204300031043122102413131004030441334421003430233421002132434410030410412013210023131344333143033100104130113101020211243212014244100323040014310143443212234',
+#                 5))
+
+print(modular_subtraction('10BEFFA48029E2498E059C91D53B9D6EC5715FE7304D2E8034EB50F770C564C43AC03D118301F27E37120C7132C7495A783643AD16FC82DED4C8173660C7CDB7AC50FB5DFC05ED18EE641284AC955FA34FEB21E7A000348A27033C337C22785EC8178514FC5EC5721DED98583B9602079309E2BBBD5B3BAB626919EB7C198AC9CBA1C98F7B50B524D880EBDAFACBBE57E9C8B3E991C4DBD17F6EFCA8F2A4DD83733351801EF8C83970FFEC27A57A367868A262EE5E80D6294DA58C6E7030887A098331C8F3DD11EEE2AABE06A50C3D91F25227C19ECB63BDDDE6EBA55AD065A2061AD3455C0F50819C6F2C6C6ED228E8FE66C8E8924892723A5F094660A74F612EDA22AD2234A1556B5F0CA0BF1B26A47C15CBAAFC80B96563B2F4500010FC816320AF7BB7BF343577417D5BCA4ADDEC0118C7792CA329406689CFBF883F01A6885340EE2A120974C65CC75159E4583C81BA804052FEDDEB9C2D345C18D406234E9E5631AC106933FC997FF645B6A22E06D64B965D622E05F4603C072864BCB56D67FEFA7ABE98686E0C6CCE093FB99ED2D4679BE234DBEA174186427FF17EA',
+    '38FBD3ADEE116D9DF87CEE7A82E1A49D672721B84EE7D0076E613CDFD446C5176CFACCA4BC612DEF10EE7E935525649363ED1FE7221282D5BDA7DD738A1DC39231CECDB772B7C2E7D4FEF4BE8100D7D37FC3FE06BEA3FEC7D1918D87D0AFD4D2B304C0D31C5FE69F20CE11510492FD0CBA1240829990818EB6D3B699ABC3E53AC9A412F40A0129934D574706137225D8DABF16FF754A8755B0F40935D003871366200B42FBA1440B258756B1BB15AB29C6E8485D263953A751F2940A6761C1622BABC27FABD8B8AAC0BC7EE78A3C53B9BE37E900239C401BC2E1C233C222377A5E0FE87AC2E1B62F76D3A7323DEF6C2694258E44C59859B019B4EDAC6142A672E09C05E1297104683E857A0F794C46436E66ACF9C70BDEBB5430806BE211867A644ED02A9C0B0AC76C6FBE7A1503A8489531961A5B5C335115A9107E5E198F003990E895D68DCCDDDB906050E2BE4A0F54F559C9C13DFEE96C40DDE6CC34A53282B2A02503CFFD7EC3331E98E06709D4DD5A26E5B2072192156796D339655BF4F5C4852103F0A8D05856FE089D75760EBE4144E64EEDFC120F6884785E3CD3A',
+    '1482E95C267EB1588C38378BDA3DE42A85CFDFDAE3187AACC7F0556C9A32F87AE61E1F98D0D2C3C9471F23D0F3BE5149A8C6831C91CD8B5051725FBB9AD622A135F9318036BB2E0ABD095E9E9CBB5884B37047D77D66A5F6E51EB2A79F44AEBA18380B718B02152D3ADF16059042249622F171DDFFB47F90C78212B816373FF825A4D1F4BFF7A76CE67FC5009FCEC60BF967B7628909D3BE7A67C938F40304A5DC0A7BC7B5C574CFC176D9A5F3E8F08AC2422B536F7D37AE45295108D21BAAA1BB352735F59E0F41F6D7F258B7AC805E09A2243E20B95552B42DED7A311F04A9854D38AFA9D1CC0500519DA99E013927508355BB1278E044BF1E0AFA50E4FF88E773C8F62A857212F7FBD12E86FEB607B926BF01A10C486B39311CD6BDC40189C1DE04ADFF8EBB7A9C622C73EA02D3FF3A72CDDAB78EEF9B6E28BC79345BBC0E0255D1A6CDD59B3130B3B815C7B7FD8AC7C0FD5E6C620BBA9EE937D865DABE2E1C2C518A4E894F395E26F990A0D26F72F2F38A9D90B410BBF89EACC613505A2BD22AF37EE22D297F1AC3855BB951FD29575244E525EC744C8F573F3F6B85614',
+    16))
