@@ -19,6 +19,7 @@ import json
 # from locale import RADIXCHAR
 from multiprocessing.managers import ValueProxy
 from radix import get_radix_rep, integer_addition, integer_subtraction
+from Features import modularReduction, modularInverse
 import time
 
 radix_dict = {
@@ -337,6 +338,10 @@ def compare(x, y):
 
 
 def modular_addition(x, y, mod, radix):
+    x = modularReduction(x, mod, radix)
+    y = modularReduction(y, mod, radix)
+    print(x)
+    print(y)
     z = integer_addition(x, y, radix)
     if compare(z, mod):
         z = integer_subtraction(z, mod, radix)
