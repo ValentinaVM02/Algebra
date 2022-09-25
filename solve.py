@@ -251,6 +251,7 @@ def integer_subtraction(x: str, y: str, r: int):
 
 
 def multiplication_karatsuba(x, y, length, radix):
+    print(x, y)
     xH = 0
     xL = 0
     yH = 0
@@ -268,20 +269,19 @@ def multiplication_karatsuba(x, y, length, radix):
         left_digit = str(radix_dict[str(int_xy // radix)])
         return left_digit + right_digit
 
-    
     if (length % 2 != 0):
         length += 1
-    xH = x[:len(x)//2] if len(x) > 1 else x
-    xL = x[len(x)//2:] if len(xH) > 1 else x #x = xH*pow(radix, length/2) + xL
-    yH = y[:len(y)//2] if len(y) > 1 else y
-    yL = y[len(y)//2:] if len(yH) > 1 else y #y = yH*pow(radix, length/2) + yL
-
+    xH = x[:length//2] if length > 1 else x
+    xL = x[length//2:] if length > 1 else x #x = xH*pow(radix, length/2) + xL
+    yH = y[:length//2] if length > 1 else y
+    yL = y[length//2:] if length > 1 else y #y = yH*pow(radix, length/2) + yL
+    print(xH, xL, yH, yL)
     #need to figureout how to handle the numbers so that I transfer them into ints on which manipulations can be made
-
+    print(integer_addition(yH, yL, radix))
     number2 = multiplication_karatsuba(xH,yH, length/2, radix)
     number0 = multiplication_karatsuba(xL, yL, length/2, radix)
-    number1 = multiplication_karatsuba(integer_addition(xH, xL, radix), integer_addition(yH, yL, radix), length/2, radix) - number0 - number2
-    answer = number2*pow(radix, length) + number1*pow(radix, length/2) + number0
+    number1 = integer_subtraction(integer_subtraction(multiplication_karatsuba(integer_addition(xH, xL, radix), integer_addition(yH, yL, radix), length/2, radix), number0, radix), number2, radix)
+    answer = integer_addition(integer_addition(integer_multiplication_naive(number2, "1" + length * "0", radix), integer_multiplication_naive(number1,"1" + (length // 2) * "0", radix), radix), number0, radix)
 
     return answer
 
@@ -377,6 +377,10 @@ def inversion (x, mod, radix):
         return x1
     else:
         print('inverse does not exist')
+
+
+print(multiplication_karatsuba('29','39', 2, 12))
+
 
 # x = "2055874C17B6A157153A43DD9CA6349B57C59904C050A2BA3635B496781294B820B46610105DBC41D3B6D362984574C00468984B4831B5313D83573524A46D6746A28D0A54B82B5162B1CB001DD99661D65227130B7CD0AC08AB153B32972D216AB9D4C211A1ADC184182C596327B7DD263C4CCB04AC531C4D48CC91625086D3BAD0187B990535864364674C5A4A281037A27C8249A76D65C3CD7275AB224D865C9A4C8504D1AB7289DCC6DBC79242AB3A0589AB81D68D187B1581DD44A9255C5C7AD640C646D346B8BA8D5DC5954C337AD33284335999C105C78AA379BA1A439BBC481CA705029A3548375B47295D93B39B9A50ABB225157310860144B989B872766A75B276DB5167AD8DA62C503AA85837A13A96463DC72638D7842589C81616A809601907A2A85171B335573A2B01798292C951BA0137B6A8D21B27DA494622917D0CC01288D8212B7657706A9AC836D8703B1B1DB03209A6196938D372543631917A7D0A7C34632AA1C289D3415334C7B79B3A40C020C145A18DCCCAA4DD94D944DBD02C265088D080367901051D585C8D3C1A2D1117D34586D7ACAD582BD7D592D73CCD1CA586D3D973D3CC89C0BA23B9D80"
 # y = "2D0D08BB790302A19964CA7297121C6AC3103331271802D9718C7278AA5C13C82929751710A625CA6D723526BCC226B782A49AD27A4BC71C3C3B85A977B1CDA6189DAD6AA82A81B763B1CC880A11B08347044455A920B65077C7DC3442ACBA3A4519937D2349B0189B67138612CCAD1307746BAB2B8219A64175CA5A28C87191DD9BB589C057AAC5B211386A320B6522D90065D3D17B792187DC2568384B0C7256AD65B48372C52AA121400644130B8165AD174C22D814D710AD8A477331B6252967341086B0CB90D305A5C68691C0A69AA1A410532944A03D3D6A4ABB193DABCB95601B43BA1B789AB9706B04389A0AC5BC45B85C701449B711CB1C96C704BB2B2D869B75352BD5C06B18BBC26D2C3C17CB2A4269CB1A3A0A088931B697D78B15D16BB1513BC6A4B8446CB8965C60813B4632DD6231C2171ABD2C00B277822715A02D31C517159D3C88BA159D4A62C8BC1A9325B601D6BB653AC7161DD39B2CA48B23121A41BD904B6D88781AD897A6B78AA83D2A28596854207842AD9CC2D059DB1680A3DABB5823314C745A65B2D51C67C8A65229C133A4C6CA30C862B5D69DAB2332208A7DA09226968CA9186D9A63C40C803"
