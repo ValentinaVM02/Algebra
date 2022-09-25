@@ -269,14 +269,6 @@ def compare(x, y):
         x_greater = True
     elif len(x) == len(y):
         x_greater = x > y
-        # for i in range (len(x)-1):
-        #     if x[i] != y[i]:
-        #         if x[i] > y[i]:
-        #             x_greater = True
-        #             break
-        #         else:
-        #             x_greater = False
-        #             break
     else:
         x_greater = False
     return x_greater
