@@ -56,16 +56,6 @@ def decimalToAnyBase(number, base):
     return ''.join(remainders)
 
 def clean_str(s:str):
-    # if len(s) > 1:
-    #     isClean = False
-    #     index = 0 if s[0] != '-' else 1
-
-    #     while not isClean:
-    #         if s[index] == '0':
-    #             s = s[index:] if not get_sign(s) else s[0]+s[index:]
-    #         else:
-    #             isClean = True
-    #             return s[index:] if not get_sign(s) else s[0]+s[index:]
 
     index = 0 if s[0] != '-' else 1
 
@@ -199,7 +189,7 @@ def integer_addition(x: str, y: str, r: int):
 
     m, signedX, signedY, x, y = determine_m(x, y)
     radix = r
-    answer = '0' * (m+2)
+    answer = ['0'] * (m+2)
     xz = '0' * (m - len(x))
     yz = '0' * (m - len(y))
 
@@ -270,6 +260,7 @@ def row_handler(values, r: int):
 
         result = integer_addition(valX, valY, r)
 
+        # store the least significant bit of the result since that wont change anymore
         ans += result[len(result) - 1]
 
         result = result[0:len(result) - 1]
@@ -277,6 +268,7 @@ def row_handler(values, r: int):
         values.pop(i)
         values[i] = result
     
+    # concat the last result of the values with accumilated bits (reversed since least significant at index = m - 1)
     ans = values[0] + ans[::-1]
 
     if ans[0] == '0':
@@ -299,9 +291,10 @@ def integer_multiplication_naive(x: str, y: str, r: int):
     x = x[1:] if get_sign(x) else x    
     y = y[1:] if get_sign(y) else y
 
+    num_x = anyBaseToDecimal(x,radix)
+
     for i in range(len(y) - 1, -1, -1):
         num_y = anyBaseToDecimal(str(radix_dict[y[i]]),radix)
-        num_x = anyBaseToDecimal(x,radix)
 
         result = decimalToAnyBase(num_x * num_y, radix)
 
@@ -310,4 +303,3 @@ def integer_multiplication_naive(x: str, y: str, r: int):
     answer = row_handler(rows, radix)
     
     return ans+('').join(answer)
-
