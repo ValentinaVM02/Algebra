@@ -197,6 +197,8 @@ def loop(m, x, y, radix, signedX, signedY, answer, operation):
 
 def integer_addition(x: str, y: str, r: int):
 
+    # print('addition', x, y)
+
     m, signedX, signedY, x, y = determine_m(x, y)
     radix = r
     answer = '0' * (m+2)
@@ -311,3 +313,4 @@ def integer_multiplication_naive(x: str, y: str, r: int):
     
     return ans+('').join(answer)
 
+print(integer_addition('0', '6', 11))
