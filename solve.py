@@ -53,11 +53,6 @@ answer = 0
 lengthNumX = 0
 lengthNumY = 0
 
-
-
-
-
-
 # removes the sign from the beggining and puts True for negative values and False for positive values
 def sign():
     global varX
@@ -117,6 +112,7 @@ def get_operands(x, y, i, j, signedX, signedY):
 
     return dictX, dictY
 
+
 def multiplication_karatsuba(x, y, length, radix):
     x = x[1:] if get_sign(x) else x    
     y = y[1:] if get_sign(y) else y
@@ -153,24 +149,18 @@ def karatsuba_recursive(x, y, length, radix):
     yH = y[:length//2] if length > 1 else y
     yL = y[length//2:] if length > 1 else y  # y = yH*pow(radix, length/2) + yL
     print('high = ', xH, xL, yH, yL)
-    # need to figureout how to handle the numbers so that I transfer them into ints on which manipulations can be made
-    # print(integer_addition(yH, yL, radix))
     number2 = karatsuba_recursive(xH, yH, length//2, radix)
     number0 = karatsuba_recursive(xL, yL, length//2, radix)
     xh_xl = integer_addition(xH, xL, radix)
     yh_yl = integer_addition(yH, yL, radix)
     new_length = max(len(xh_xl), len(yh_yl))
-    # if len(xh_xl) < new_length:
-    #     xh_xl = '0' + xh_xl
-    # if len(yh_yl) < new_length:
-    #     yh_yl = '0' + yh_yl
+
     
     number1 = integer_subtraction(integer_subtraction(karatsuba_recursive(xh_xl, yh_yl, new_length, radix), number0, radix), number2, radix)
     print('numbers', number2, number1, number0)
     add1 = integer_multiplication_naive(number2, ("1" + length * "0"), radix)
     print(number1, 'and', ("1" + (length // 2) * "0"))
     add2 = integer_multiplication_naive(number1, ("1" + (length // 2) * "0"), radix)
-    # print(add1, 'neshto', add2)
     answer = integer_addition(add1, add2, radix)
     answer = integer_addition(answer, number0, radix)
 
@@ -192,15 +182,12 @@ def extended_euclidean_algorithm(x, y, radix):
     b2 = '1'
     while (y[:1] != '-' and y[:1] != '0'):
         q = division(x, y, radix)
-        # length = max(len(str(y)), len(str(q)))
         r = integer_subtraction(
             x, integer_multiplication_naive(q, y, radix), radix)
         x = y
         y = r
-        # length = max(len(str(q)), len(str(a2)))
         a3 = integer_subtraction(
             a1, integer_multiplication_naive(q, a2, radix), radix)
-        # length = max(len(str(q)), len(str(b2)))
         b3 = integer_subtraction(
             b1, integer_multiplication_naive(q, b2, radix), radix)
         a1, b1 = a2, b2
@@ -286,14 +273,6 @@ def modular_inversion (x, mod, radix):
         return x1
     else:
         print('inverse does not exist')
-
-# print(extended_euclidean_algorithm('20', '5', 10))
-
-
-x = "6532195861762276690903859A6719324211209395A7A343631614A2430312693870061883341316A89116A1721950A465A5715077297652492442A64A7841A704327459063805661770729096078725A56471A9255478983879265284598367183692637427533A461223455609738277552AA501726139580A00052465991A8551A18764863454961275778630609A774364701887027A976718995604679701A12391A223A841A019467AA252053597209A2964A47912A45AA392068571673862303526A9740336A7415251062517433351A8412599A15900115641560298183515018A1230599A2645229080864A6755207178A617210052A235A82A9A050597199828110708868971760872AAA33707716044393A9430596128079193A352303724A9275153303237A48A3AA66068415802087299AA471531505531738A3A06973929230116165A95695313768103816824686034585091186326A4742741479744635A65577808249405203AA058727277442420461548A53150788871125562991A9AA5884A930114A107A53908048904298682651128A54A5913935779513750266050A777107A4919544A810653638644158925599155A2819A869963A5732248AA47984551A89389A451029753052198476374664136986556A19A"
-y = "642057959936758780238A8A11A136785743077823325A009760670454646145396187343288271A375213820A0560585199382181571215076567589238613750456681AA2423A2650414414223524725691658138202203730AA966871658780196797670A753919426121A57667544832255041442247652A53A44454061A272207A5724A719702A991980706568977030768524A3A781A08A1400A9845A651182630936A008A188A367127519543A638670746525A58496A830A86A5844717301986A7A752525488063264085A4944485062542894498829150034876778480A05156460653974908402A026314390AAA83A5A9A5764A919285A08AA96913A89434747591AA00A285A8221AA4889595847908581902891060217705023269598661494613690923011A539894A254202A3750227A30553783A373246093A0847410382412834805398348245829493A3010A1904889235A7609AA99909407189A93151043984999826942A038947049950640088943990544123200639257280A03896719637331731405043099079736923A58970587A7747211A58581136065436480770360990977037472514741A12A22088029585343198921039806112A5686225954101262622280A853178677135563959474626908A9061A8A"
-    
-print(multiplication_karatsuba(x, y, max(len(x), len(y)), 11))
 
 
 def solve_exercise(exercise_location: str, answer_location: str):

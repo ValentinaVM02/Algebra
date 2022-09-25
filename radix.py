@@ -1,5 +1,8 @@
 
 
+from Features import modularReduction
+
+
 radix_dict = {
     '0': 0,
     '1': 1,
@@ -64,10 +67,7 @@ def clean_str(s:str):
            s = s[1:] if not get_sign(s) else s[0]+s[1:]
         else:
             break 
-    
-    
     return s
-
 
 
 def get_sign(a):
@@ -144,7 +144,7 @@ def loop(m, x, y, radix, signedX, signedY, answer, operation):
             answer[i] = str(radix_dict[str(addResult)])   
     
     
-    # if x,y>0, then adding each bit suffices
+    # if x, y > 0, then adding each bit suffices
     elif ((not signedX and not signedY) and operation == "+") or ((not signedX and signedY) and operation == "-"):
 
         for i in range(m+1, 1, -1):
@@ -155,7 +155,7 @@ def loop(m, x, y, radix, signedX, signedY, answer, operation):
             addResult -= radix if carry == 1 else 0
             answer[i] = str(radix_dict[str(addResult)])   
 
-    # if x,y > 0, then subtracting each digit and 
+    # if x, y > 0, then subtracting each digit
     elif ((not signedX and not signedY) and operation == "-") or ((not signedX and signedY) and operation == "+"):
 
         for i in range(m+1, 1, -1):
@@ -187,8 +187,6 @@ def loop(m, x, y, radix, signedX, signedY, answer, operation):
 
 def integer_addition(x: str, y: str, r: int):
 
-    # print('addition', x, y)
-
     m, signedX, signedY, x, y = determine_m(x, y)
     radix = r
     answer = ['0'] * (m+2)
@@ -219,9 +217,6 @@ def integer_subtraction(x: str, y: str, r: int):
     return answer
 
 
-#print(integer_subtraction('-A', 'F', 16))
-
-
 def determine_m_multiplication(x, y):
     signedX = get_sign(x)
     signedY = get_sign(y)
@@ -239,11 +234,6 @@ def get_operands_multiplication(x, y, i, j):
     dictY = radix_dict[y[j]]
 
     return dictX, dictY
-
-
-
-
-#print(get_radix_rep('255', 16))
 
 
 # the idea is to handle each multiplication as a row and add together all the rows at the end
@@ -306,4 +296,3 @@ def integer_multiplication_naive(x: str, y: str, r: int):
     
     return ans+('').join(answer)
 
-print(integer_addition('0', '6', 11))
