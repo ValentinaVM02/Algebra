@@ -18,7 +18,6 @@
 import json
 # from locale import RADIXCHAR
 from multiprocessing.managers import ValueProxy
-from radix import get_radix_rep, integer_addition, integer_subtraction
 from Features import modularReduction, modularInverse
 from radix import get_radix_rep, integer_addition, integer_subtraction, integer_multiplication_naive
 import time
